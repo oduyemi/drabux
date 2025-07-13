@@ -5,7 +5,7 @@ import withdraw from "../assets/withdraw.png";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import DepositModal from "../Modals/DepositModal";
 import WithdrawModal from "../Modals/WithdrawModal";
-import { useAuth } from "../contexts/AuthContext"; // Assuming AuthContext gives you userID
+import { useAuth } from "../contexts/AuthContext"; 
 
 const Account = () => {
   const { user } = useAuth();
