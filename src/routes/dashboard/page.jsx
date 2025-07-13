@@ -92,7 +92,7 @@ const DashboardPage = () => {
               You haven't made any investments yet.
             </p>
             <Link
-              to="/stake"
+              to="/invest"
               className="rounded-lg bg-[#00006D] px-6 py-2 text-white font-semibold hover:bg-blue-800 transition"
             >
               Stake Funds

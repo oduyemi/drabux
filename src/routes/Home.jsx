@@ -35,7 +35,7 @@ const Home = () => {
       {/* Main Content */}
       <div className="z-10 text-center mt-16 sm:mt-28">
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold font-sans tracking-tight drop-shadow-lg">
-          Welcome to <span className="text-yellow-300">Drabux</span>
+          Welcome to <span className="text-yellow-300">Novunt</span>
         </h1>
 
         <p className="mt-5 min-h-[60px] px-2 text-base sm:text-lg lg:text-xl leading-relaxed font-light text-gray-100">

@@ -25,13 +25,14 @@ import DepositProcess from "./routes/DepositProcess";
 import WithdrawalProcessing from "./routes/WithdrawalProcessing";
 import InvestmentProcessing from "./routes/InvestmentProcessing";
 import WithdrawUSDT from "./routes/WithdrawUSDT";
+import NotFound from "./components/NotFound";
 
 
 const router = createBrowserRouter([
     // Standalone Home Page Route
     {
         path: "/",
-        element: <Home />, // Ensure this is your home page component
+        element: <Home />, 
     },
     {
         path: "/app",
@@ -55,6 +56,9 @@ const router = createBrowserRouter([
           { path: "withdrawal-process", element: <WithdrawalProcessing /> },
           { path: "ranking", element: <Ranking /> },
           { path: "verification-success", element: <VerificationSuccess /> },
+
+          // 🧼 Catch-all for /app/*
+          { path: "*", element: <NotFound /> },
         ]
       },
     
@@ -73,6 +77,12 @@ const router = createBrowserRouter([
             { path: "forgot-password", element: <ForgotPassword /> },
         ],
     },
+    
+    // Catch-all for all other unmatched routes (e.g. /random-url)
+  {
+    path: "*",
+    element: <NotFound />,
+  },
 ]);
 
 function App() {
