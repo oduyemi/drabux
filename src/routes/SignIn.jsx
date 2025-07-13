@@ -12,17 +12,27 @@ const SignIn = () => {
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const credentials = Object.fromEntries(formData);
+  e.preventDefault();
+  const formData = new FormData(e.currentTarget);
+  const identifier = formData.get("identifier");
+  const password = formData.get("password");
 
-    try {
-      await signIn(credentials);
-      navigate("/app/dashboard");
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const credentials = { password };
+
+  if (identifier.includes("@")) {
+    credentials.email = identifier;
+  } else {
+    credentials.username = identifier;
+  }
+
+  try {
+    await signIn(credentials);
+    navigate("/app/dashboard");
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-white">
@@ -43,7 +53,6 @@ const SignIn = () => {
 
       {/* Right Side (Form Section) */}
       <div className="w-full md:w-1/2 flex flex-col h-screen bg-gradient-to-b from-[#F5F5F5] to-[#D8DAFF] relative">
-        {/* Mobile View - Blue Header */}
         <div className="md:hidden absolute top-0 left-0 w-full h-[26vh] bg-gradient-to-b from-[#0000FE] to-[#00006D] z-10">
           <img
             src={backdrop}
@@ -62,15 +71,15 @@ const SignIn = () => {
         <div className="z-20 relative mt-[26vh] md:mt-0 flex-grow flex flex-col justify-center px-6 md:px-0">
           <div className="mx-auto w-full max-w-md bg-white rounded-t-[3rem] shadow-xl px-8 py-10">
             <form onSubmit={handleSubmit} className="space-y-5">
-              {/* Email */}
+              {/* Identifier Field */}
               <div>
                 <label className="block text-sm font-medium bg-[#cecef1] p-3 rounded-lg">
-                  Email Address
+                  Username or Email
                 </label>
                 <input
-                  type="email"
-                  name="email"
-                  placeholder="Enter your email"
+                  type="text"
+                  name="identifier"
+                  placeholder="Enter your username or email"
                   required
                   className="w-full px-4 py-3 bg-transparent placeholder-gray-500 focus:outline-none"
                 />
@@ -98,7 +107,7 @@ const SignIn = () => {
                 </div>
               </div>
 
-              {/* Submit */}
+              {/* Sign In Button */}
               <button
                 type="submit"
                 className="w-full bg-gradient-to-r from-[#0000FE] to-[#00006D] text-white py-3 rounded-lg text-lg font-medium hover:opacity-90 transition"

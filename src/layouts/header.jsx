@@ -6,55 +6,64 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 export const Header = ({ collapsed, setCollapsed }) => {
-    const { user } = useAuth();
-    return (
-        <header className="relative flex h-[60px] items-center justify-between bg-gradient-to-r from-[#D8DAFF] to-[#F5F5F5] px-4 shadow-md transition-colors">
-            <div className="flex items-center gap-x-3">
-                {/* Left arrow icon to toggle sidebar */}
-                <button
-                    className="btn-ghost size-10"
-                    onClick={() => setCollapsed(!collapsed)} // Toggle the sidebar state
-                >
-                    <ChevronsLeft className={collapsed ? "rotate-180 transition-transform" : "transition-transform"} />
-                </button>
+  const { user } = useAuth();
 
-                <div className="flex flex-1 flex-col md:ml-10">
-                    {/* Show user's first name from AuthContext */}
-                    <h2 className="text-lg font-semibold text-[#00006D]">
-                        Welcome Back{user && user.fname ? `, ${user.fname}` : "!"}
-                    </h2>
-                </div>
-            </div>
+  return (
+    <header className="sticky top-0 z-50 flex h-16 items-center justify-between bg-white/90 px-6 shadow-none backdrop-blur-md transition-all duration-300">
+      {/* Left: Sidebar Toggle + Greeting */}
+      <div className="flex items-center gap-4">
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          className="group flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white shadow-none transition hover:border-blue-500 hover:bg-blue-50"
+        >
+          <ChevronsLeft
+            size={20}
+            className={`text-gray-600 transition-transform duration-300 group-hover:text-blue-600 ${
+              collapsed ? "rotate-180" : ""
+            }`}
+          />
+        </button>
 
-            {/* Right-side icons (Notification & Profile) */}
-            <div className="flex items-center gap-x-3">
-                {/* Notification Icon */}
-                <Link to="/notification">
-                    <button className="btn-ghost flex size-10 items-center justify-center rounded-full transition-all duration-300 hover:bg-gray-200 active:scale-90">
-                        <img
-                            className="h-6 w-6 cursor-pointer transition-transform duration-300 hover:scale-110"
-                            src={notify}
-                            alt="notification"
-                        />
-                    </button>
-                </Link>
+        <div className="hidden sm:flex flex-col leading-tight">
+          <span className="text-sm text-gray-500">Dashboard</span>
+          <h2 className="text-lg font-semibold text-gray-800">
+            Welcome back
+            <span className="text-blue-600">{user?.fname ? `, ${user.fname}` : "!"}</span>
+          </h2>
+        </div>
+      </div>
 
-                {/* Profile Icon */}
-                <Link to="/edit-profile">
-                    <button className="flex size-10 items-center justify-center overflow-hidden rounded-full transition-all duration-300 hover:ring-2 hover:ring-blue-500 active:scale-90">
-                        <img
-                            className="h-6 w-6 cursor-pointer transition-transform duration-300 hover:scale-110"
-                            src={profile}
-                            alt="profile"
-                        />
-                    </button>
-                </Link>
-            </div>
-        </header>
-    );
+      {/* Right: Actions */}
+      <div className="flex items-center gap-4">
+        {/* Notification */}
+        <Link to="/notification">
+          <button className="relative group flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 shadow-none transition hover:bg-blue-50">
+            <img
+              src={notify}
+              alt="Notifications"
+              className="h-6 w-6 transition-transform duration-200 group-hover:scale-110"
+            />
+            {/* Optional red dot */}
+            <span className="absolute top-1 right-1 h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+          </button>
+        </Link>
+
+        {/* Profile */}
+        <Link to="/edit-profile">
+          <div className="relative h-10 w-10 overflow-hidden rounded-full border border-gray-200 shadow-none ring-offset-2 transition-all duration-200 hover:ring-2 hover:ring-blue-500 hover:shadow-xs cursor-pointer">
+            <img
+              src={profile}
+              alt="User profile"
+              className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
+            />
+          </div>
+        </Link>
+      </div>
+    </header>
+  );
 };
 
 Header.propTypes = {
-    collapsed: PropTypes.bool,
-    setCollapsed: PropTypes.func,
+  collapsed: PropTypes.bool,
+  setCollapsed: PropTypes.func,
 };
