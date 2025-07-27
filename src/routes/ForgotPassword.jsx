@@ -1,18 +1,17 @@
 import { useState, useEffect, useRef } from "react";
-import VerificationSuccess from "./VerificationSuccess";
-import { forgotPassword } from "../services/auth";
+import ResetVerificationSuccess from "./ResetVerificationSuccess";
 
 const ForgotPassword = ({ isOpen, onClose }) => {
   const [isCodeModalOpen, setIsCodeModalOpen] = useState(false);
   const [isVerified, setIsVerified] = useState(false);
-  const [otp, setOtp] = useState(["", "", "", ""]);
+  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [timer, setTimer] = useState(60);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
   const emailRef = useRef(null);
-  const otpRefs = [useRef(null), useRef(null), useRef(null), useRef(null)];
+  const otpRefs = [useRef(null), useRef(null), useRef(null), useRef(null), useRef(null), useRef(null)];
 
   useEffect(() => {
     if (isOpen) emailRef.current?.focus();
@@ -23,7 +22,7 @@ const ForgotPassword = ({ isOpen, onClose }) => {
       otpRefs[0].current?.focus();
       setTimer(60);
       setError("");
-      setOtp(["", "", "", ""]);
+      setOtp(["", "", "", "", "", ""]);
     }
   }, [isCodeModalOpen]);
 
@@ -48,7 +47,21 @@ const ForgotPassword = ({ isOpen, onClose }) => {
     setError("");
 
     try {
-      await forgotPassword(email);
+      const res = await fetch(
+        "https://novunt.vercel.app/api/v1/auth/reset-password/request",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.message || "Failed to send reset link");
+      }
+
       setIsCodeModalOpen(true);
       setTimeout(onClose, 100);
     } catch (error) {
@@ -57,6 +70,7 @@ const ForgotPassword = ({ isOpen, onClose }) => {
       setLoading(false);
     }
   };
+
 
   const handleOtpChange = (index, value) => {
     if (!/^\d?$/.test(value)) return;
@@ -80,15 +94,39 @@ const ForgotPassword = ({ isOpen, onClose }) => {
   const handleResendCode = () => {
     setTimer(60);
     setError("");
-    setOtp(["", "", "", ""]);
+    setOtp(["", "", "", "", "", ""]);
   };
 
-  const handleVerifyOtp = () => {
+  const handleVerifyOtp = async () => {
     const enteredOtp = otp.join("");
-    if (enteredOtp === "1234") {
+    if (enteredOtp.length !== 6) {
+      setError("Enter all 6 digits of the verification code");
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        "https://novunt.vercel.app/api/v1/auth/reset-password/verify",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, token: enteredOtp }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Invalid code");
+      }
+
+      // ✅ Store email and token in localStorage
+      localStorage.setItem("resetEmail", email);
+      localStorage.setItem("resetToken", enteredOtp);
+
       setIsVerified(true);
-    } else {
-      setError("Invalid verification code. Please try again.");
+    } catch (error) {
+      setError(error.message || "Verification failed");
     }
   };
 
@@ -151,7 +189,7 @@ const ForgotPassword = ({ isOpen, onClose }) => {
               Check Your Email
             </h1>
             <p className="text-sm text-gray-600 mb-4">
-              We sent a 4-digit code to your email.
+              We sent a 6-digit code to your email.
             </p>
 
             {/* OTP Input Fields */}
@@ -200,7 +238,7 @@ const ForgotPassword = ({ isOpen, onClose }) => {
 
       {/* Verification Success Page */}
       
-      {isVerified && <VerificationSuccess onClose={() => setIsVerified(false)} />}
+      {isVerified && <ResetVerificationSuccess onClose={() => setIsVerified(false)} />}
 
     </>
   );
