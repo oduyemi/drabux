@@ -40,17 +40,20 @@ export const resetPassword = async (token, newPassword) => {
 
 export const editProfile = async (profileData) => {
   try {
-    const token = localStorage.getItem('token'); // Get token from storage
-    const response = await axios.put(`${API_URL}/user/profile`, profileData, {
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');  // Make sure you store this on login
+
+    const response = await axios.patch(`${API_URL}/users/${userId}`, profileData, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    throw error.response?.data || error;
   }
 };
+
 
 export const verifyOtp = async (verificationCode, email) => {
   try {
@@ -64,10 +67,12 @@ export const verifyOtp = async (verificationCode, email) => {
 export const uploadProfilePicture = async (file) => {
   try {
     const token = localStorage.getItem('token');
-    const formData = new FormData();
-    formData.append('file', file);
+    const userId = localStorage.getItem('userId');
 
-    const response = await axios.post(`${API_URL}/user/profile/picture`, formData, {
+    const formData = new FormData();
+    formData.append('profilePicture', file); 
+
+    const response = await axios.patch(`${API_URL}/users/user/${userId}/profile-picture`, formData, {
       headers: {
         Authorization: `Bearer ${token}`,
         'Content-Type': 'multipart/form-data'
@@ -75,6 +80,6 @@ export const uploadProfilePicture = async (file) => {
     });
     return response.data;
   } catch (error) {
-    throw error.response.data;
+    throw error.response?.data || error;
   }
 };

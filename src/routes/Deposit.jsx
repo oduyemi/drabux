@@ -1,24 +1,33 @@
 import React, { useState, useEffect } from "react";
 import { FaArrowLeft } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
-import ConfirmDepositModal from "../components/ConfirmDeposit";
+import DepositConfirm from "./DepositConfirm";
 
 
 const Deposit = () => {
   const { user, token } = useAuth();
+  const [wallet, setWallet] = useState(null);
   const [amount, setAmount] = useState("");
+  const [depositData, setDepositData] = useState(null);
   const [goal, setGoal] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    if (!user) return;
-    const headers = { Authorization: `Bearer ${token}` };
-  }, [user, token]);
+    const fetchWallet = async () => {
+      try {
+        const res = await axios.get(`https://novunt.vercel.app/api/v1/wallets/${user._id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setWallet(res.data.wallet);
+      } catch (err) {
+        console.error("Failed to fetch wallet:", err);
+      }
+    };
 
+    if (user?._id) fetchWallet();
+  }, [user?._id]);
 
   const [checked, setChecked] = useState({
     risk: false,
@@ -33,34 +42,32 @@ const Deposit = () => {
 
   const allChecked = Object.values(checked).every(Boolean);
   const handleDeposit = async () => {
-    setLoading(true);
-    setError("");
+  setLoading(true);
+  setError("");
 
-    try {
-      const token = localStorage.getItem("token");
-      const res = await fetch("https://novunt.vercel.app/api/v1/transactions/deposit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ amount: parseFloat(amount), goal }),
-      });
+  try {
+    const res = await fetch("https://novunt.vercel.app/api/v1/transactions/deposit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ amount: parseFloat(amount), goal }),
+    });
 
       const data = await res.json();
+      if (!res.ok) throw new Error(data.message || "Deposit initiation failed.");
 
-      if (!res.ok) {
-        throw new Error(data.message || "Deposit initiation failed.");
-      }
+      setDepositData(data);
+      setOpen(true); // Show the modal here
 
-      localStorage.setItem("depositInvoice", JSON.stringify(data));
-      navigate("/confirm-deposit");
     } catch (err) {
       setError(err.message || "Something went wrong.");
     } finally {
       setLoading(false);
     }
   };
+
 
   const handleOpenConfirmModal = () => {
     if (!amount || parseFloat(amount) < 10) {
@@ -160,7 +167,13 @@ const Deposit = () => {
           Cancel
         </button>
       </div>
-      <ConfirmDepositModal isOpen={open} onClose={() => setOpen(false)} />
+      <DepositConfirm
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        depositData={depositData}
+        amount={parseFloat(amount)}
+        wallet={wallet}
+      />
     </div>
   );
 };

@@ -56,6 +56,8 @@ const router = createBrowserRouter([
           { path: "withdrawal-process", element: <WithdrawalProcessing /> },
           { path: "ranking", element: <Ranking /> },
           { path: "verification-success", element: <VerificationSuccess /> },
+          {Path:"/confirm-deposit", element: <DepositConfirm />}, 
+
 
           // 🧼 Catch-all for /app/*
           { path: "*", element: <NotFound /> },

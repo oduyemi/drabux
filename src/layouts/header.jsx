@@ -36,7 +36,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
       {/* Right: Actions */}
       <div className="flex items-center gap-4">
         {/* Notification */}
-        <Link to="/notification">
+        <Link to="/app/notification">
           <button className="relative group flex h-10 w-10 items-center justify-center rounded-full bg-gray-50 shadow-none transition hover:bg-blue-50">
             <img
               src={notify}
@@ -49,7 +49,7 @@ export const Header = ({ collapsed, setCollapsed }) => {
         </Link>
 
         {/* Profile */}
-        <Link to="/edit-profile">
+        <Link to="/app/edit-profile">
           <div className="relative h-10 w-10 overflow-hidden rounded-full border border-gray-200 shadow-none ring-offset-2 transition-all duration-200 hover:ring-2 hover:ring-blue-500 hover:shadow-xs cursor-pointer">
             <img
               src={profile}
