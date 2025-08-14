@@ -4,7 +4,7 @@ import axios from 'axios';
 const API_URL = import.meta.env.DEV ? '/api/v1' : 'https://novunt.vercel.app/api/v1';
 
 // For development - set to false to use real API with proxy, true for mock mode
-const USE_MOCK_API = true; // Switch to mock mode if real API has issues
+const USE_MOCK_API = false; // Now we can use real API through proxy
 
 // Mock user storage for development (in production this would be a real database)
 let mockUserDatabase = [

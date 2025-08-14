@@ -34,19 +34,34 @@ export const AuthProvider = ({ children }) => {
   const signIn = async (credentials) => {
     try {
       const response = await signInService(credentials);
+      console.log('Sign-in response:', response); // Debug log
+      
+      // Handle different response structures
+      const userData = response.data || response;
       const user = {
-        userID: response.userID,
-        fname: response.fname,
-        lname: response.lname,
-        email: response.email,
-        username: response.username
+        userID: userData.userID || userData._id || userData.id,
+        fname: userData.fname || userData.firstName,
+        lname: userData.lname || userData.lastName,
+        email: userData.email,
+        username: userData.username
       };
+      
+      const token = userData.token || response.token;
+      
+      if (!token) {
+        throw new Error('No authentication token received');
+      }
+      
       setUser(user);
-      setToken(response.token);
+      setToken(token);
       localStorage.setItem('user', JSON.stringify(user));
-      localStorage.setItem('token', response.token);
+      localStorage.setItem('token', token);
+      
+      return response; // Return response for success handling
     } catch (error) {
-      alert(error.message);
+      console.error('Sign-in error:', error);
+      const errorMessage = error.message || error.error || 'Sign-in failed';
+      alert(errorMessage);
       throw error;
     }
   };
@@ -77,10 +92,19 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    localStorage.removeItem('hasSeenActivityPopup'); // Clear popup tracking too
+  };
+
+  // Debug function to clear all auth data
+  const clearAllAuthData = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.clear(); // Clear everything
+    console.log('All authentication data cleared');
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, signIn, signUp, signOut, verifyOtp }}>
+    <AuthContext.Provider value={{ user, token, signIn, signUp, signOut, verifyOtp, clearAllAuthData }}>
       {children}
     </AuthContext.Provider>
   );

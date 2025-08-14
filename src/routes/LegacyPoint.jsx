@@ -8,7 +8,7 @@ const LegacyPoint = () => {
      
         {/* Logo */}
         <div className="flex justify-center">
-          <img src={drabuxLogo} alt="Drabux" className="w-24 h-24 object-contain" />
+          <img src={drabuxLogo} alt="Novunt" className="w-24 h-24 object-contain" />
         </div>
 
         {/* Title */}
@@ -23,10 +23,10 @@ const LegacyPoint = () => {
 
         {/* Description */}
         <p className="text-gray-600 text-center text-sm leading-relaxed">
-          Earn <span className="text-blue-700 font-semibold">Drabux Legacy Points</span> from weekly shared profits, team incentives, and gamification rewards.
+          Earn <span className="text-blue-700 font-semibold">Novunt Legacy Points</span> from weekly shared profits, team incentives, and gamification rewards.
         </p>
         <p className="text-gray-600 text-center text-sm mt-2 leading-relaxed">
-          Your Legacy Points will be converted into <span className="text-blue-700 font-semibold">exclusive airdrops</span> once the Drabux blockchain launches.
+          Your Legacy Points will be converted into <span className="text-blue-700 font-semibold">exclusive airdrops</span> once the Novunt blockchain launches.
         </p>
         <p className="text-gray-600 text-center text-sm mt-2 leading-relaxed">
           The more you earn, the more legacy wealth you accumulate for future blockchain rewards!
@@ -34,7 +34,7 @@ const LegacyPoint = () => {
 
         {/* CTA Button */}
         <button className="mt-6 w-full bg-gradient-to-r from-blue-600 to-blue-800 text-white font-semibold py-3 rounded-lg shadow-lg hover:scale-105 transition-transform">
-          Drabux Legacy Point
+          Novunt Legacy Point
         </button>
       </div>
     </div>

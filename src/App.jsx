@@ -5,6 +5,7 @@ import Layout from "@/routes/layout";
 import Home from "@/routes/Home"; // Import the standalone home page
 import DashboardPage from "@/routes/dashboard/page";
 import AuthLayout from "@/routes/AuthLayout";
+import ProtectedRoute from "@/components/ProtectedRoute";
 
 import Transactions from "@/components/Transactions";
 import Gamify from "../src/routes/gamify";
@@ -18,6 +19,7 @@ import EditProfile from "../src/routes/EditProfile";
 import Notification from "./routes/Notification";
 import LegacyPoint from "./routes/LegacyPoint";
 import Deposit from "./routes/Deposit";
+import Stake from "./routes/Stake";
 import Ranking from "./routes/Ranking";
 import WithdrawalConfirm from "./routes/WithdrawalConfirm";
 import DepositConfirm from "./routes/DepositConfirm";
@@ -25,6 +27,7 @@ import DepositProcess from "./routes/DepositProcess";
 import WithdrawalProcessing from "./routes/WithdrawalProcessing";
 import InvestmentProcessing from "./routes/InvestmentProcessing";
 import WithdrawUSDT from "./routes/WithdrawUSDT";
+import Education from "./routes/Education";
 import NotFound from "./components/NotFound";
 
 
@@ -36,7 +39,11 @@ const router = createBrowserRouter([
     },
     {
         path: "/app",
-        element: <Layout />,
+        element: (
+            <ProtectedRoute>
+                <Layout />
+            </ProtectedRoute>
+        ),
         children: [
           { index: true, element: <DashboardPage /> },
           { path: "dashboard", element: <DashboardPage /> },
@@ -44,7 +51,9 @@ const router = createBrowserRouter([
           { path: "invest", element: <Deposit /> },
           { path: "team", element: <Team /> },
           { path: "quest", element: <Gamify /> },
+          { path: "education", element: <Education /> },
           { path: "deposit", element: <Deposit /> },
+          { path: "stake", element: <Stake /> },
           { path: "withdraw-usdt", element: <WithdrawUSDT /> },
           { path: "confirm-withdrawal", element: <WithdrawalConfirm /> },
           { path: "investment-in-process", element: <InvestmentProcessing /> },
@@ -66,19 +75,18 @@ const router = createBrowserRouter([
     
     
 
-    // Authentication Pages
-    {
-        path: "/auth",
-        element: <AuthLayout />,
-        children: [
-            { path: "signin", element: <SignIn /> },
-            { path: "create", element: <SignUp /> },
-            { path: "verification-success", element: <VerificationSuccess /> },
-           
-            { path: "new-password", element: <NewPassword /> },
-            { path: "forgot-password", element: <ForgotPassword /> },
-        ],
-    },
+  // Authentication Pages
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      { path: "signin", element: <SignIn /> },
+      { path: "create", element: <SignUp /> },
+      { path: "verification-success", element: <VerificationSuccess /> },
+      { path: "new-password", element: <NewPassword /> },
+      { path: "forgot-password", element: <ForgotPassword /> },
+    ],
+  },
     
     // Catch-all for all other unmatched routes (e.g. /random-url)
   {

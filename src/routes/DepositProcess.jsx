@@ -18,7 +18,7 @@ const DepositProcess = () => {
         />
 
         <p className="text-sm sm:text-base text-[#00006D] mb-6">
-          You'll receive an email once your funds are available in your Drabux wallet.
+          You'll receive an email once your funds are available in your Novunt wallet.
         </p>
 
         <Link to="/app/dashboard" aria-label="Go to dashboard">

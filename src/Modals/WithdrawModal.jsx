@@ -22,7 +22,7 @@ const WithdrawModal = ({ isOpen, onClose }) => {
         {/* Title & Description */}
         <h2 className="text-2xl font-extrabold text-[#00006D] font-grotesk">Withdraw USDT</h2>
         <p className="text-gray-500 text-sm mt-2 font-serif">
-          Securely transfer USDT from your Drabux wallet. <br />
+          Securely transfer USDT from your Novunt wallet. <br />
           The minimum withdrawal amount is 10 USDT, <br />
           and a 3% transaction fee applies.
         </p>

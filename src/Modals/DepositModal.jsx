@@ -19,7 +19,7 @@ const DepositModal = ({ isOpen, onClose }) => {
                 {/* Title & Description */}
                 <h2 className="text-xl font-bold text-[#00006D] font-grotesk mt-2">Deposit USDT</h2>
                 <p className="text-gray-500 text-sm mt-2 font-serif">
-                    Securely fund your Drabux wallet with USDT. The minimum deposit amount is 10 USDT, and there are no transaction fees.
+                    Securely fund your Novunt wallet with USDT. The minimum deposit amount is 10 USDT, and there are no transaction fees.
                 </p>
 
                 {/* USDT Icon */}

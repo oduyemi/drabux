@@ -29,15 +29,15 @@ const Account = () => {
     useEffect(() => {
         const fetchWallet = async () => {
         try {
-            const res = await fetch(`https://novunt.vercel.app/api/v1/wallets/${user?._id}`, {
+            const res = await fetch(`https://novunt.vercel.app/api/v1/wallets/${user?.userID}`, {
             headers: {
                 "Content-Type": "application/json",
             },
             });
             
             const data = await res.json();
-            if (res.ok) {
-            const w = data.wallet;
+            if (res.ok && data) {
+            const w = data.wallet || data.data?.wallet || {};
             setWallet({
                 balance: w.balance || 0,
                 totalDeposited: w.totalDeposited || 0,
@@ -45,14 +45,14 @@ const Account = () => {
                 dlp: 1250,
             });
             } else {
-            console.error("Wallet fetch failed:", data.message);
+            console.error("Wallet fetch failed:", data?.message || "Unknown error");
             }
         } catch (error) {
             console.error("Error fetching wallet:", error);
         }
         };
 
-        if (user?._id) fetchWallet();
+        if (user?.userID) fetchWallet();
     }, [user]);
 
     return (

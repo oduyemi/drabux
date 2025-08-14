@@ -1,11 +1,18 @@
 import axios from 'axios';
 
-// API Configuration - Use proxy in development, direct URL in production
-const API_URL = import.meta.env.DEV ? '/api/v1' : 'https://novunt.vercel.app/api/v1';
+// API Configuration
+const isDevelopment = process.env.NODE_ENV === 'development';
+const API_URL = isDevelopment ? '/api/v1' : 'https://novunt.vercel.app/api/v1';
 
-// For development - set to false to use real API with proxy, true for mock mode
-const USE_MOCK_API = true; // Switch to mock mode if real API has issues
+// For development - set to false to use real API with proxy
+const USE_MOCK_API = false; // Now we can use real API through proxy
 
+// Mock responses for development
+const mockLogin = async (credentials) => {
+  console.log('Using mock login for development');
+  console.log('Received credentials:', { email: credentials.email, password: credentials.password });
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
+  
 // Mock user storage for development (in production this would be a real database)
 let mockUserDatabase = [
   {
@@ -32,6 +39,7 @@ let mockUserDatabase = [
     lname: 'User', 
     username: 'testuser'
   },
+  // Add more flexible test accounts
   {
     email: 'user@test.com',
     password: 'password',
@@ -48,6 +56,7 @@ let mockUserDatabase = [
     lname: 'User',
     username: 'example'
   },
+  // Add your real credentials for frontend testing
   {
     email: 'Olaitanismail87@gmail.com',
     password: 'OlaitanIsmail@1987',
@@ -134,60 +143,6 @@ const mockSignUp = async (userData) => {
     email: userData.email,
     requiresVerification: true
   };
-};
-
-// Mock OTP verification for development
-const mockVerifyOtp = async (verificationCode, email) => {
-  console.log('Using mock OTP verification for development');
-  console.log('OTP Code:', verificationCode, 'for Email:', email);
-  
-  // Simulate network delay
-  await new Promise(resolve => setTimeout(resolve, 1000));
-  
-  // Accept any 6-digit OTP for mock verification
-  if (!verificationCode || verificationCode.length !== 6) {
-    throw { message: 'Please enter a valid 6-digit verification code' };
-  }
-  
-  // Get pending registration data
-  const pendingRegistration = localStorage.getItem('pendingRegistration');
-  if (!pendingRegistration) {
-    throw { message: 'No pending registration found. Please register again.' };
-  }
-  
-  const registrationData = JSON.parse(pendingRegistration);
-  if (registrationData.email !== email) {
-    throw { message: 'Email mismatch. Please try again.' };
-  }
-  
-  // Create new user and add to database
-  const newUser = {
-    userID: 'mock-verified-user-' + Date.now(),
-    fname: registrationData.fname,
-    lname: registrationData.lname,
-    email: registrationData.email,
-    username: registrationData.username,
-    password: registrationData.password // Store for future logins
-  };
-  
-  // Add to mock database so user can sign in later
-  addUserToMockDatabase(newUser);
-  
-  // Clean up pending registration
-  localStorage.removeItem('pendingRegistration');
-  
-  const mockUserData = {
-    userID: newUser.userID,
-    fname: newUser.fname,
-    lname: newUser.lname,
-    email: newUser.email,
-    username: newUser.username,
-    token: 'mock-jwt-token-verified-' + Date.now(),
-    message: 'Account verified successfully!'
-  };
-  
-  console.log('Mock OTP verification successful! User added to database.');
-  return mockUserData;
 };
 
 export const signUp = async (userData) => {
@@ -286,6 +241,60 @@ export const editProfile = async (profileData) => {
   }
 };
 
+// Mock OTP verification for development
+const mockVerifyOtp = async (verificationCode, email) => {
+  console.log('Using mock OTP verification for development');
+  console.log('OTP Code:', verificationCode, 'for Email:', email);
+  
+  // Simulate network delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  
+  // Accept any 6-digit OTP for mock verification
+  if (!verificationCode || verificationCode.length !== 6) {
+    throw { message: 'Please enter a valid 6-digit verification code' };
+  }
+  
+  // Get pending registration data
+  const pendingRegistration = localStorage.getItem('pendingRegistration');
+  if (!pendingRegistration) {
+    throw { message: 'No pending registration found. Please register again.' };
+  }
+  
+  const registrationData = JSON.parse(pendingRegistration);
+  if (registrationData.email !== email) {
+    throw { message: 'Email mismatch. Please try again.' };
+  }
+  
+  // Create new user and add to database
+  const newUser = {
+    userID: 'mock-verified-user-' + Date.now(),
+    fname: registrationData.fname,
+    lname: registrationData.lname,
+    email: registrationData.email,
+    username: registrationData.username,
+    password: registrationData.password // Store for future logins
+  };
+  
+  // Add to mock database so user can sign in later
+  addUserToMockDatabase(newUser);
+  
+  // Clean up pending registration
+  localStorage.removeItem('pendingRegistration');
+  
+  const mockUserData = {
+    userID: newUser.userID,
+    fname: newUser.fname,
+    lname: newUser.lname,
+    email: newUser.email,
+    username: newUser.username,
+    token: 'mock-jwt-token-verified-' + Date.now(),
+    message: 'Account verified successfully!'
+  };
+  
+  console.log('Mock OTP verification successful! User added to database.');
+  return mockUserData;
+};
+
 export const verifyOtp = async (verificationCode, email) => {
   // If mock mode is enabled, use mock OTP verification
   if (USE_MOCK_API) {
@@ -306,7 +315,7 @@ export const uploadProfilePicture = async (file) => {
     const userId = localStorage.getItem('userId');
 
     const formData = new FormData();
-    formData.append('profilePicture', file);
+    formData.append('profilePicture', file); 
 
     const response = await axios.patch(`${API_URL}/users/user/${userId}/profile-picture`, formData, {
       headers: {

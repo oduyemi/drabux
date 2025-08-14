@@ -16,22 +16,24 @@ const InvestmentGraph = () => {
 
   useEffect(() => {
     const fetchInvestmentData = async () => {
-      if (!user?._id) return;
+      if (!user?.userID) return;
 
       try {
         const res = await fetch(
-          `https://novunt.vercel.app/api/v1/transactions/stakes/history/${user._id}`
+          `https://novunt.vercel.app/api/v1/transactions/stakes/history/${user.userID}`
         );
         const data = await res.json();
 
-        if (!res.ok || !data.stakes) {
-          console.error("Error fetching investment data:", data?.message);
+        if (!res.ok || !data) {
+          console.error("Error fetching investment data:", data?.message || "Unknown error");
           return;
         }
 
+        const stakes = data.stakes || data.data?.stakes || [];
+
         // Aggregate monthly totals
         const monthlyTotals = {};
-        data.stakes.forEach((stake) => {
+        stakes.forEach((stake) => {
           const date = new Date(stake.createdAt);
           const month = date.toLocaleString("default", { month: "short" }); // e.g., "Jan"
           monthlyTotals[month] = (monthlyTotals[month] || 0) + stake.amount;

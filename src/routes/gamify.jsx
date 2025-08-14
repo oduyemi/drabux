@@ -19,7 +19,7 @@ const Gamify = () => {
         />
         <h4 className="text-lg font-semibold text-gray-800">How it works</h4>
         <p className="text-gray-600 mt-2">
-          You'll soon be able to earn & redeem Drabux Experience Points for epic rewards!
+          You'll soon be able to earn & redeem Novunt Experience Points for epic rewards!
         </p>
         <button className="w-full mt-6 py-3 bg-blue-600 text-white font-semibold rounded-md shadow-md 
                           hover:bg-blue-700 transition-all duration-300 transform hover:scale-105">
@@ -36,7 +36,7 @@ const Gamify = () => {
           <FaCoins className="text-yellow-500 text-5xl mb-4 animate-bounce" />
           <h4 className="text-lg font-semibold text-gray-900">Earn Rewards</h4>
           <p className="text-gray-600 text-sm mt-2">
-            Gain Drabux Points by completing quests and engaging with the platform.
+            Gain Novunt Points by completing quests and engaging with the platform.
           </p>
         </div>
 
@@ -56,7 +56,7 @@ const Gamify = () => {
           <FaGift className="text-red-500 text-5xl mb-4 animate-bounce" />
           <h4 className="text-lg font-semibold text-gray-900">Redeem Gifts</h4>
           <p className="text-gray-600 text-sm mt-2">
-            Exchange your Drabux Points for investment bonuses and other rewards.
+            Exchange your Novunt Points for staking bonuses and other rewards.
           </p>
         </div>
 

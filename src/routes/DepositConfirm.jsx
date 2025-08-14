@@ -14,10 +14,12 @@ const DepositConfirm = ({ isOpen, onClose, depositData, userId }) => {
 
   useEffect(() => {
     if (userId && isOpen) {
-      fetch(`/wallets/${userId}`)
+      fetch(`https://novunt.vercel.app/api/v1/wallets/${userId}`)
         .then((res) => res.json())
         .then((data) => {
-          setWallet(data.wallet);
+          if (data && data.wallet) {
+            setWallet(data.wallet);
+          }
           setLoading(false);
         })
         .catch((err) => {
@@ -82,7 +84,7 @@ const DepositConfirm = ({ isOpen, onClose, depositData, userId }) => {
             <p className="text-gray-700 text-sm">
               Send exactly{" "}
               <span className="font-semibold text-black">${amountToDeposit} USDT</span> to the wallet address below. <br />
-              Ensure you meet the minimum of <strong>10 USDT</strong>.
+              Ensure you meet the minimum of <strong>20 USDT</strong>.
             </p>
           </div>
 
@@ -111,7 +113,7 @@ const DepositConfirm = ({ isOpen, onClose, depositData, userId }) => {
 
           <Link to="/app/deposit-process">
             <button className="w-full bg-gradient-to-r from-[#0000FE] to-[#00006D] text-white py-3 rounded-lg text-sm font-semibold hover:opacity-90 transition">
-              I've Deposited
+              I&apos;ve Deposited
             </button>
           </Link>
         </div>
